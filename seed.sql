@@ -26,11 +26,11 @@ CREATE TABLE employee (
     manager_id INT NULL
 );
 
-INSERT INTO department (id, name)
-VALUES ("1", "Human Resources")
+INSERT INTO department (name)
+VALUES ("Human Resources"), ("Quality Assurance"), ("Computing");
 
-INSERT INTO role (id, title, salary, department_id)
-VALUES ("1", "HR Manager", "$50,000", "1")
+INSERT INTO role (title, salary, department_id)
+VALUES ("HR Manager", "50000", "404"), ("QA Manager", "40000", "505"), ("Computer Monitor", "45000", "606");
 
-INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
-VALUES ("1", "Brandon", "Kim", "0", "1")
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Brandon", "Kim", "0", "101"), ("Nikola", "Tesla", "10", "202"), ("Thomas", "Edison", "20", "303");

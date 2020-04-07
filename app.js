@@ -23,7 +23,7 @@ connection.connect(function(err) {
 function initialChoice() {
     inquirer.prompt({
       name: "action",
-      type: "rawlist",
+      type: "list",
       message: "What would you like to do?",
       choices: [
         "View departments/roles/employees",
@@ -34,26 +34,28 @@ function initialChoice() {
     .then(function(answer) {
     switch (answer.action) {
         case "View departments/roles/employees":
-            // artistSearch();
-            console.log("View departments/roles/employees");
+            console.log("View departments/roles/employees ==>");
+            viewAllDepartments();
+            viewAllRoles();
+            viewAllEmployees();
             break;
     
           case "Add departments/roles/employees":
-            // multiSearch();
-            console.log("Add departments/roles/employees");
+            console.log("Add departments/roles/employees ==>");
+            
             break;
     
           case "Update employee roles":
-            // rangeSearch();
-            console.log("Update employee roles");
+            console.log("Update employee roles ==>");
+
             break;
           }
         });
     }
     
 
-// View & add departments, roles, employees
-function queryAllDepartments() {
+// View departments, roles, employees
+function viewAllDepartments() {
     connection.query("SELECT * FROM department", function(err, res) {
       if (err) throw err;
       for (var i = 0; i < res.length; i++) {
@@ -63,7 +65,7 @@ function queryAllDepartments() {
     });
   }
 
-  function queryAllRoles() {
+  function viewAllRoles() {
     connection.query("SELECT * FROM role", function(err, res) {
       if (err) throw err;
       for (var i = 0; i < res.length; i++) {
@@ -73,8 +75,8 @@ function queryAllDepartments() {
     });
   }
   
-  function queryAllEmployees() {
-    connection.query("SELECT * FROM role", function(err, res) {
+  function viewAllEmployees() {
+    connection.query("SELECT * FROM employee", function(err, res) {
       if (err) throw err;
       for (var i = 0; i < res.length; i++) {
         console.log(res[i].id + " | " + res[i].first_name + " | " + res[i].last_name + " | " + res[i].role_id + " | " + res[i].manager_id);
@@ -84,6 +86,6 @@ function queryAllDepartments() {
   }
   
   
-  // logs the actual query being run
+// logs the actual query being run
 //   console.log(query.sql);
-  connection.end();
+//   connection.end();
