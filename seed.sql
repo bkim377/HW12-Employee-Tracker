@@ -34,3 +34,7 @@ VALUES ("HR Manager", "50000", "404"), ("QA Manager", "40000", "505"), ("Compute
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Brandon", "Kim", "0", "101"), ("Nikola", "Tesla", "10", "202"), ("Thomas", "Edison", "20", "303");
+
+SELECT * FROM ((department
+INNER JOIN role ON department.id = role.id)
+INNER JOIN employee ON department.id = employee.id);
