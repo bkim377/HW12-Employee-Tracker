@@ -204,6 +204,47 @@ function addEmployees() {
     })
 }
 
-// logs the actual query being run
-//   console.log(query.sql);
-//   connection.end();
+function updateEmployeeRoles(){
+    connection.query("SELECT first_name, last_name, id FROM employee",
+    function(err, res){
+        if (err) throw err;
+        let employee = res.map(employee => ({
+            name: employee.first_name + " " + employee.last_name, value: employee.id
+        }))
+
+        inquirer.prompt ([
+            {
+                type: "list",
+                message: "Which employee's role do you want to change?",
+                name: "employeeName",
+                choices: employee
+            },
+            {
+                type: "input",
+                message: "What is the employee's new role?",
+                name: "newRole"
+            },
+            {
+                type: "input",
+                message: "What is the employee's new salary amount?",
+                name: "newSalary"
+            }
+        ]).then(function(answer){
+            connection.query("UPDATE role SET ? WHERE ?",
+            [{
+                title: answer.newRole,
+                salary: answer.newSalary
+            },
+            {
+                id: answer.employeeName
+            }
+            ],
+            function (err, res){
+                if (err) throw err;
+                console.log("Employee data updated!");
+                initialChoice();
+            }
+            )
+        })
+    })
+}
