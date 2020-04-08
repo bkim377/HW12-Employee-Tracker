@@ -81,53 +81,127 @@ function initialChoice() {
     });
 }
 
-// View departments, roles, employees
-function viewAllDepartments() {
+// View current departments
+function viewDepartments() {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-      console.log(res[i].id + " | " + res[i].name);
-    }
-    console.log("-----------------------------------");
+    console.table(res);
+    initialChoice();
   });
 }
-
-function viewAllRoles() {
+// View current roles
+function viewRoles() {
   connection.query("SELECT * FROM role", function(err, res) {
     if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-      console.log(
-        res[i].id +
-          " | " +
-          res[i].title +
-          " | " +
-          res[i].salary +
-          " | " +
-          res[i].department_id
-      );
-    }
-    console.log("-----------------------------------");
+    console.table(res);
+    initialChoice();
   });
 }
-
-function viewAllEmployees() {
+// View current employees
+function viewEmployees() {
   connection.query("SELECT * FROM employee", function(err, res) {
     if (err) throw err;
-    for (var i = 0; i < res.length; i++) {
-      console.log(
-        res[i].id +
-          " | " +
-          res[i].first_name +
-          " | " +
-          res[i].last_name +
-          " | " +
-          res[i].role_id +
-          " | " +
-          res[i].manager_id
-      );
-    }
-    console.log("-----------------------------------");
+    console.table(res);
+    initialChoice();
   });
+}
+// =========================================================================================
+// Add new department
+function addDepartments() {
+  inquirer.prompt(
+      {
+        type: "input",
+        message: "What department do you want to add?",
+        name: "newDepartment"
+      }
+  ).then(function(answer){
+      connection.query("INSERT INTO department SET ?",
+      {name: answer.newDepartment}, function(err){
+          if (err) throw err;
+          console.log("New Department added to table!");
+          initialChoice();
+      })
+  })
+};
+// Add new roles
+function addRoles() {
+    let department_ids = [];
+    connection.query("SELECT department_id FROM role", function(err, res) {
+        if(err) throw err;
+        for (let i = 0; i < res.length; i++){
+            department_ids.push({department_id: res[i].department_id});
+        }
+    })
+
+    inquirer.prompt([
+        {
+          type: "input",
+          message: "What role do you want to add?",
+          name: "newRole"
+        },
+        {
+          type: "input",
+          message: "What is the role's salary?",
+          name: "newSalary"
+        },
+        {
+          type: "list",
+          message: "What is the role's department ID #?",
+          name: "newDept",
+          choices: department_ids
+        }
+    ]
+    ).then(function(answer){
+        connection.query("INSERT INTO role SET ?",
+        {
+         title: answer.newRole,
+         salary: answer.newSalary,
+         department_id: answer.newDept
+        }, function(err){
+            if (err) throw err;
+            console.log("New Role added to table!");
+            initialChoice();
+        })
+    })
+  };
+
+// Add new employees
+function addEmployees() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the employee's first name?",
+            name: "firstName"
+        },
+        {
+            type: "input",
+            message: "What is the employee's last name?",
+            name: "lastName"
+        },
+        {
+            type: "input",
+            message: "What is the employee's role ID #?",
+            name: "role_id"
+        },
+        {
+            type: "input",
+            message: "What is their manager's id #?",
+            name: "manager_id",
+            default: 0
+        }
+    ]).then(function(answer){
+        connection.query("INSERT INTO employee SET ?",
+        {
+            first_name: answer.firstName,
+            last_name: answer.lastName,
+            role_id: answer.role_id,
+            manager_id: answer.manager_id
+        }, function(err){
+            if (err) throw err;
+            console.log("New Employee added to table!");
+            initialChoice();
+        })
+    })
 }
 
 // logs the actual query being run
